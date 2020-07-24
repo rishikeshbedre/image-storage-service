@@ -1,0 +1,34 @@
+version: '3.5'
+services:
+  image_storage_service:
+    ports:
+    - "3333:3333"
+    networks:
+      - test-network
+    image: image-storage-service:0.0.1
+    environment: 
+      - HOSTIP=${HOSTIP}
+      #- PRODMODE=true         # ---- uncomment to disable swagger documentation
+    volumes:
+    - ../image-db:/home/app/image-db
+    depends_on: 
+      - "mq_broker_service"
+    container_name: image_storage_container
+  mq_broker_service:
+    ports:
+    - "1883:1883"
+    networks:
+      - test-network
+    image: eclipse-mosquitto:1.6.9
+    container_name: mq_broker_container
+  notification_subscriber_service:
+    networks: 
+      - test-network
+    image: notification-subscriber-service:0.0.1
+    depends_on: 
+      - "mq_broker_service"
+    container_name: notify_subscriber_container
+
+networks:
+  test-network:
+    name: test_network

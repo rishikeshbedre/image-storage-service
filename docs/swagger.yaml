@@ -1,0 +1,311 @@
+definitions:
+  model.AlbumJSON:
+    properties:
+      albumName:
+        type: string
+    required:
+    - albumName
+    type: object
+  model.ErrorMessage:
+    properties:
+      error:
+        type: string
+    type: object
+  model.ImageJSON:
+    properties:
+      imageName:
+        type: string
+    required:
+    - imageName
+    type: object
+  model.ListAlbumJSON:
+    properties:
+      albumList:
+        items:
+          type: string
+        type: array
+    type: object
+  model.ListImageJSON:
+    properties:
+      imageList:
+        items:
+          type: string
+        type: array
+    type: object
+  model.SuccessMessage:
+    properties:
+      message:
+        type: string
+    type: object
+info:
+  contact:
+    email: rishikeshbedre@gmail.com
+    name: Rishikesh Bedre
+  license: {}
+paths:
+  /albums:
+    get:
+      description: get list of albums present in the storage
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.ListAlbumJSON'
+      summary: list of albums
+      tags:
+      - albums
+    post:
+      consumes:
+      - application/json
+      description: creates new album if not present
+      parameters:
+      - description: Add Album
+        in: body
+        name: album
+        required: true
+        schema:
+          $ref: '#/definitions/model.AlbumJSON'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.SuccessMessage'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorMessage'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorMessage'
+      summary: create a album
+      tags:
+      - albums
+  /albums/{albumName}:
+    delete:
+      description: deletes the specified album if present
+      parameters:
+      - description: Delete Album
+        in: path
+        name: albumName
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.SuccessMessage'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorMessage'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorMessage'
+      summary: delete a album
+      tags:
+      - albums
+    patch:
+      consumes:
+      - application/json
+      description: update the specified album if present
+      parameters:
+      - description: Update Album Old Name
+        in: path
+        name: albumName
+        required: true
+        type: string
+      - description: Update Album New Name
+        in: body
+        name: newAlbumName
+        required: true
+        schema:
+          $ref: '#/definitions/model.AlbumJSON'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.SuccessMessage'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorMessage'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorMessage'
+      summary: update a album
+      tags:
+      - albums
+  /albums/{albumName}/images:
+    get:
+      description: returns list of images of the specified album
+      parameters:
+      - description: Album name
+        in: path
+        name: albumName
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.ListImageJSON'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorMessage'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorMessage'
+      summary: list of images
+      tags:
+      - images
+    post:
+      consumes:
+      - multipart/form-data
+      description: adds an image to the specified album
+      parameters:
+      - description: Album name
+        in: path
+        name: albumName
+        required: true
+        type: string
+      - description: Add Image
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.SuccessMessage'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorMessage'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorMessage'
+      summary: add a image
+      tags:
+      - images
+  /albums/{albumName}/images/{imageName}:
+    delete:
+      description: deletes a image from the specified album
+      parameters:
+      - description: Album name
+        in: path
+        name: albumName
+        required: true
+        type: string
+      - description: Image name
+        in: path
+        name: imageName
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.SuccessMessage'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorMessage'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorMessage'
+      summary: delete a image
+      tags:
+      - images
+    get:
+      description: get the specified image from the server
+      parameters:
+      - description: Album name
+        in: path
+        name: albumName
+        required: true
+        type: string
+      - description: Image name
+        in: path
+        name: imageName
+        required: true
+        type: string
+      produces:
+      - application/octet-stream
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: file
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorMessage'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorMessage'
+      summary: get a image
+      tags:
+      - images
+    patch:
+      consumes:
+      - application/json
+      description: updates the image in specified album
+      parameters:
+      - description: Album name
+        in: path
+        name: albumName
+        required: true
+        type: string
+      - description: Update Image Old Name
+        in: path
+        name: imageName
+        required: true
+        type: string
+      - description: Update Image New Name
+        in: body
+        name: newImageName
+        required: true
+        schema:
+          $ref: '#/definitions/model.ImageJSON'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.SuccessMessage'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorMessage'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorMessage'
+      summary: update a image
+      tags:
+      - images
+swagger: "2.0"
