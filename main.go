@@ -27,6 +27,7 @@ func main() {
 
 	go lib.WriteImageInfoToFile(lib.ImageInfoChan)
 	go lib.NotifierService(lib.NotifierChan, hostIP)
+	lib.ReadImageInfoFromFile()
 
 	// programatically set swagger info
 	docs.SwaggerInfo.Title = "Image Storage Service"
