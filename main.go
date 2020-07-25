@@ -19,6 +19,7 @@ import(
 // @contact.email rishikeshbedre@gmail.com
 
 func main() {
+	go lib.CleanUp()
 
 	hostIP := os.Getenv("HOSTIP")
 	port := ":3333"
@@ -40,6 +41,9 @@ func main() {
 	gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()
 	router.Use(cors.Default())
+
+	// Set a lower memory limit for multipart forms (default is 32 MiB)
+	router.MaxMultipartMemory = 8 << 20 // 8 MiB
 
 	v1 := router.Group("/api/v1")
 	{

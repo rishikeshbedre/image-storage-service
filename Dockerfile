@@ -15,6 +15,8 @@ RUN make
 
 FROM alpine:3.12 AS prod
 
+ENV GODEBUG=madvdontneed=1
+
 RUN mkdir -p /home/app \
     && mkdir -p /home/app/image-db
 

@@ -3,6 +3,7 @@ services:
   image_storage_service:
     ports:
     - "3333:3333"
+    #- "6060:6060"             # ----- uncomment to enable pprof
     networks:
       - test-network
     image: image-storage-service:0.0.1
