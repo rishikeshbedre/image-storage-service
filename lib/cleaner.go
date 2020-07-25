@@ -6,7 +6,7 @@ import(
 	"runtime/debug"
 	//"log"
 	//"net/http"
-	_ "net/http/pprof"
+	//_ "net/http/pprof"
 )
 
 // CleanUp function call GC and freeosmem
