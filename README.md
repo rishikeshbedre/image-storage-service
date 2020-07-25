@@ -26,7 +26,7 @@ Image Storage Service is a microservice based on REST APIs to store and retrieve
 
 ![design](https://github.com/rishikeshbedre/image-storage-service/blob/master/extras/design.jpg)
 
-Image storage service has REST end-points to add/delete/modify albums and images. These images are stored in database(file-system) along with meta-info like which image belongs to which album. On successful operations of storing or retrieving of images or albums this service publishes notification messages to MQTT broker and anyone who wants to listen this notification can subscribe to the topic 'imagestore/notifier'.
+<p align="justify">Image storage service has REST end-points to add/delete/modify albums and images. These images are stored in database(file-system) along with meta-info like which image belongs to which album. On successful operations of storing or retrieving of images or albums this service publishes notification messages to MQTT broker and anyone who wants to listen this notification can subscribe to the topic 'imagestore/notifier'.</p>
 
 ## Usage
 
@@ -59,7 +59,7 @@ Or else link to the document is shown in the logs. Swagger document can be disab
 
 Benchmarking for this application is not done.
 
-`*But when ran simple tests, I noticed that while adding a big image the container's RAM usage was increasing and not releasing it back. So I debug the application using pprof and saw that both heap and CPU profile were fine. Later I decreased the value of memory block used by multipart forms (from 32mb to 8mb), this decreased the memory usage but didn't solve the memory issue. As I was using golang version above 1.12, this is the expected behaviour (memory is freed by GC but OS doesn't take it back until its required). This can be harmful in container environment, so I have set 'GODEBUG=madvdontneed=1' instead of MADV_FREE and calling FreeOSMemory() in a interval.*`
+<p align="justify">`*But when ran simple tests, I noticed that while adding a big image the container's RAM usage was increasing and not releasing it back. So I debug the application using pprof and saw that both heap and CPU profile were fine. Later I decreased the value of memory block used by multipart forms (from 32mb to 8mb), this decreased the memory usage but didn't solve the memory issue. As I was using golang version above 1.12, this is the expected behaviour (memory is freed by GC but OS doesn't take it back until its required). This can be harmful in container environment, so I have set 'GODEBUG=madvdontneed=1' instead of MADV_FREE and calling FreeOSMemory() in a interval.*`</p>
 
 ## Docker
 
