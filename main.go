@@ -1,18 +1,18 @@
 package main
 
-import(
-	"os"
+import (
 	"log"
+	"os"
 
 	"github.com/rishikeshbedre/image-storage-service/apis"
 	docs "github.com/rishikeshbedre/image-storage-service/docs"
-	"github.com/rishikeshbedre/image-storage-service/model"
 	"github.com/rishikeshbedre/image-storage-service/lib"
+	"github.com/rishikeshbedre/image-storage-service/model"
 
-	"github.com/gin-gonic/gin"
 	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
-	"github.com/swaggo/gin-swagger"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 // @contact.name Rishikesh Bedre
@@ -34,7 +34,7 @@ func main() {
 	docs.SwaggerInfo.Title = "Image Storage Service"
 	docs.SwaggerInfo.Description = "A microservice based on REST APIs to store and retrieve images."
 	docs.SwaggerInfo.Version = "1.0"
-	docs.SwaggerInfo.Host = hostIP+port
+	docs.SwaggerInfo.Host = hostIP + port
 	docs.SwaggerInfo.BasePath = "/api/v1"
 	docs.SwaggerInfo.Schemes = []string{"http"}
 
@@ -67,10 +67,10 @@ func main() {
 	log.Println("Image Storage Service started at port", port)
 	_, envPresent := os.LookupEnv("PRODMODE")
 	if !envPresent {
-		log.Println("Swagger Documentation available at http://"+hostIP+port+"/swagger/index.html")
+		log.Println("Swagger Documentation available at http://" + hostIP + port + "/swagger/index.html")
 		router.GET("/swagger/*any", ginSwagger.DisablingWrapHandler(swaggerFiles.Handler, "PRODMODE"))
 	}
 
 	// listen and serve on 3333
-	router.Run(port) 
+	router.Run(port)
 }

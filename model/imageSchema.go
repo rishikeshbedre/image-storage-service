@@ -1,6 +1,6 @@
 package model
 
-import(
+import (
 	"sync"
 )
 
@@ -13,5 +13,5 @@ type ImageField struct {
 // ImageSchema stores info of all albums in a map
 type ImageSchema struct {
 	sync.RWMutex
-	AlbumMap map[string]map[string]ImageField 
+	AlbumMap map[string]map[string]ImageField
 }

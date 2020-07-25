@@ -37,7 +37,7 @@ func WriteImageInfoToFile(imageInfoChan chan bool) {
 }
 
 // ReadImageInfoFromFile function reads the image info on start of the application
-func ReadImageInfoFromFile(){
+func ReadImageInfoFromFile() {
 	permErr := os.Chmod("image-db", 0777)
 	if permErr != nil {
 		log.Println("Error in setting folder permission: ", permErr)

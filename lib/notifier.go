@@ -21,7 +21,7 @@ func mqttConnect(hostIP string) (mqtt.Client, error) {
 
 func createClientOptions(hostIP string) *mqtt.ClientOptions {
 	opts := mqtt.NewClientOptions()
-	opts.AddBroker("tcp://"+hostIP+":1883")
+	opts.AddBroker("tcp://" + hostIP + ":1883")
 	opts.SetKeepAlive(60)
 	opts.SetConnectionLostHandler(func(mqttClient mqtt.Client, err error) {
 		log.Printf("MQ Broker Connection lost, reason: %v\n", err)
@@ -44,7 +44,7 @@ func NotifierService(notifierChan chan string, hostIP string) {
 
 	log.Println("Connected to Image Store Notification Service")
 	for {
-		tempMSG, ok := <- notifierChan
+		tempMSG, ok := <-notifierChan
 		if !ok {
 			log.Println("Notifier channel closed, notification service interupted")
 			mqttCloseConnection(clientObj)

@@ -1,10 +1,10 @@
 package apis
 
-import(
+import (
 	"net/http"
 
-	"github.com/rishikeshbedre/image-storage-service/model"
 	"github.com/rishikeshbedre/image-storage-service/lib"
+	"github.com/rishikeshbedre/image-storage-service/model"
 
 	"github.com/gin-gonic/gin"
 )
@@ -16,7 +16,7 @@ import(
 // @Produce json
 // @Success 200 {object} model.ListAlbumJSON
 // @Router /albums [get]
-func ListAlbums(c *gin.Context){
+func ListAlbums(c *gin.Context) {
 	tempList := lib.OpListAlbums()
 	c.JSON(http.StatusOK, gin.H{"albumList": tempList})
 }
@@ -32,7 +32,7 @@ func ListAlbums(c *gin.Context){
 // @Failure 400 {object} model.ErrorMessage
 // @Failure 500 {object} model.ErrorMessage
 // @Router /albums [post]
-func AddAlbum(c *gin.Context){
+func AddAlbum(c *gin.Context) {
 	var addAlbum model.AlbumJSON
 	if jsonbinderr := c.ShouldBindJSON(&addAlbum); jsonbinderr != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": jsonbinderr.Error()})
@@ -41,7 +41,7 @@ func AddAlbum(c *gin.Context){
 	if respCode, addAlbumErr := lib.OpAddAlbum(addAlbum.AlbumName); addAlbumErr != nil {
 		c.JSON(respCode, gin.H{"error": addAlbumErr.Error()})
 	} else {
-		c.JSON(respCode, gin.H{"message": addAlbum.AlbumName+" album added"})
+		c.JSON(respCode, gin.H{"message": addAlbum.AlbumName + " album added"})
 	}
 }
 
@@ -55,12 +55,12 @@ func AddAlbum(c *gin.Context){
 // @Failure 400 {object} model.ErrorMessage
 // @Failure 500 {object} model.ErrorMessage
 // @Router /albums/{albumName} [delete]
-func DeleteAlbum(c *gin.Context){
+func DeleteAlbum(c *gin.Context) {
 	albumname := c.Param("albumName")
 	if respCode, deleteAlbumErr := lib.OpDeleteAlbum(albumname); deleteAlbumErr != nil {
 		c.JSON(respCode, gin.H{"error": deleteAlbumErr.Error()})
 	} else {
-		c.JSON(respCode, gin.H{"message": albumname+" album deleted"})
+		c.JSON(respCode, gin.H{"message": albumname + " album deleted"})
 	}
 }
 
@@ -76,7 +76,7 @@ func DeleteAlbum(c *gin.Context){
 // @Failure 400 {object} model.ErrorMessage
 // @Failure 500 {object} model.ErrorMessage
 // @Router /albums/{albumName} [patch]
-func UpdateAlbum(c *gin.Context){
+func UpdateAlbum(c *gin.Context) {
 	oldalbumname := c.Param("albumName")
 	var updateAlbum model.AlbumJSON
 	if jsonbinderr := c.ShouldBindJSON(&updateAlbum); jsonbinderr != nil {
@@ -86,6 +86,6 @@ func UpdateAlbum(c *gin.Context){
 	if respCode, updateAlbumErr := lib.OpUpdateAlbum(oldalbumname, updateAlbum.AlbumName); updateAlbumErr != nil {
 		c.JSON(respCode, gin.H{"error": updateAlbumErr.Error()})
 	} else {
-		c.JSON(respCode, gin.H{"message": "album "+oldalbumname+" modified to "+updateAlbum.AlbumName})
+		c.JSON(respCode, gin.H{"message": "album " + oldalbumname + " modified to " + updateAlbum.AlbumName})
 	}
 }

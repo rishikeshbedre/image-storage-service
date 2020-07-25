@@ -1,3 +1,4 @@
 image-storage-service
 image-db
-extras/notifierSubscriber/notifier-subscriber 
+extras/notifierSubscriber/notifier-subscriber
+coverage.txt

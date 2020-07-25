@@ -109,7 +109,7 @@ func OpUpdateAlbum(oldname, newname string) (int, error) {
 	ImageInfo.AlbumMap[newname] = ImageInfo.AlbumMap[oldname]
 	delete(ImageInfo.AlbumMap, oldname)
 	ImageInfo.Unlock()
-	NotifierChan <- oldname + " album modified to " + newname 
+	NotifierChan <- oldname + " album modified to " + newname
 	ImageInfoChan <- true
 	return http.StatusOK, nil
 }
@@ -119,7 +119,7 @@ func OpListImages(albumname string) ([]string, error) {
 	ImageInfo.RLock()
 	_, isAlbumPresent := ImageInfo.AlbumMap[albumname]
 	ImageInfo.RUnlock()
-	if !isAlbumPresent{
+	if !isAlbumPresent {
 		return nil, errors.New(albumname + " album is not present")
 	}
 
@@ -137,7 +137,7 @@ func OpDeleteImage(albumname, imagename string) (int, error) {
 	ImageInfo.RLock()
 	_, isAlbumPresent := ImageInfo.AlbumMap[albumname]
 	ImageInfo.RUnlock()
-	if !isAlbumPresent{
+	if !isAlbumPresent {
 		return http.StatusBadRequest, errors.New(albumname + " album is not present")
 	}
 
@@ -148,12 +148,12 @@ func OpDeleteImage(albumname, imagename string) (int, error) {
 		return http.StatusBadRequest, errors.New(imagename + " image is not present")
 	}
 
-	_, statErr := os.Stat(StoragePath+albumname+"/"+imagename)
+	_, statErr := os.Stat(StoragePath + albumname + "/" + imagename)
 	if os.IsNotExist(statErr) {
 		return http.StatusInternalServerError, errors.New(imagename + " image is present database but not in storage")
 	}
 
-	errFile := os.RemoveAll(StoragePath+albumname+"/"+imagename)
+	errFile := os.RemoveAll(StoragePath + albumname + "/" + imagename)
 	if errFile != nil {
 		return http.StatusInternalServerError, errors.New(imagename + " image present but cannot delete")
 	}
@@ -161,7 +161,7 @@ func OpDeleteImage(albumname, imagename string) (int, error) {
 	ImageInfo.Lock()
 	delete(ImageInfo.AlbumMap[albumname], imagename)
 	ImageInfo.Unlock()
-	NotifierChan <- imagename + " image deleted from album "+ albumname
+	NotifierChan <- imagename + " image deleted from album " + albumname
 	ImageInfoChan <- true
 	return http.StatusOK, nil
 }
@@ -171,7 +171,7 @@ func OpUpdateImage(albumname, oldimagename, newimagename string) (int, error) {
 	ImageInfo.RLock()
 	_, isAlbumPresent := ImageInfo.AlbumMap[albumname]
 	ImageInfo.RUnlock()
-	if !isAlbumPresent{
+	if !isAlbumPresent {
 		return http.StatusBadRequest, errors.New(albumname + " album is not present")
 	}
 
@@ -182,7 +182,7 @@ func OpUpdateImage(albumname, oldimagename, newimagename string) (int, error) {
 		return http.StatusBadRequest, errors.New(oldimagename + " image is not present")
 	}
 
-	_, statErr := os.Stat(StoragePath+albumname+"/"+oldimagename)
+	_, statErr := os.Stat(StoragePath + albumname + "/" + oldimagename)
 	if os.IsNotExist(statErr) {
 		return http.StatusInternalServerError, errors.New(oldimagename + " image is present database but not in storage")
 	}
@@ -195,11 +195,11 @@ func OpUpdateImage(albumname, oldimagename, newimagename string) (int, error) {
 	ImageInfo.Lock()
 	ImageInfo.AlbumMap[albumname][newimagename] = model.ImageField{
 		FileName: newimagename,
-		FilePath: StoragePath+albumname+"/"+newimagename,
+		FilePath: StoragePath + albumname + "/" + newimagename,
 	}
 	delete(ImageInfo.AlbumMap[albumname], oldimagename)
 	ImageInfo.Unlock()
-	NotifierChan <- oldimagename + " image modified to "+ newimagename
+	NotifierChan <- oldimagename + " image modified to " + newimagename
 	ImageInfoChan <- true
 	return http.StatusOK, nil
 }

@@ -1,6 +1,6 @@
 package main
 
-import(
+import (
 	"log"
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
@@ -30,7 +30,7 @@ func mqttCloseConnection(mqttClient mqtt.Client) {
 	mqttClient.Disconnect(250)
 }
 
-func main(){
+func main() {
 	done := make(chan bool)
 
 	log.Println("Trying to Connect to MQ Broker....")

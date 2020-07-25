@@ -1,14 +1,15 @@
 package apis
 
-import(
-	"net/http"
-	"path/filepath"
-	"os"
+import (
 	"io"
+	"net/http"
+	"os"
+	"path/filepath"
+
 	//"log"
 
-	"github.com/rishikeshbedre/image-storage-service/model"
 	"github.com/rishikeshbedre/image-storage-service/lib"
+	"github.com/rishikeshbedre/image-storage-service/model"
 
 	"github.com/gin-gonic/gin"
 )
@@ -23,7 +24,7 @@ import(
 // @Failure 400 {object} model.ErrorMessage
 // @Failure 500 {object} model.ErrorMessage
 // @Router /albums/{albumName}/images [get]
-func ListImages(c *gin.Context){
+func ListImages(c *gin.Context) {
 	albumname := c.Param("albumName")
 	tempList, listImagesErr := lib.OpListImages(albumname)
 	if listImagesErr != nil {
@@ -44,14 +45,14 @@ func ListImages(c *gin.Context){
 // @Failure 400 {object} model.ErrorMessage
 // @Failure 500 {object} model.ErrorMessage
 // @Router /albums/{albumName}/images/{imageName} [get]
-func GetImage(c *gin.Context){
+func GetImage(c *gin.Context) {
 	albumname := c.Param("albumName")
 	imagename := c.Param("imageName")
 
 	lib.ImageInfo.RLock()
 	_, isAlbumPresent := lib.ImageInfo.AlbumMap[albumname]
 	lib.ImageInfo.RUnlock()
-	if !isAlbumPresent{
+	if !isAlbumPresent {
 		c.JSON(http.StatusBadRequest, gin.H{"error": albumname + " album is not present"})
 		return
 	}
@@ -64,7 +65,7 @@ func GetImage(c *gin.Context){
 		return
 	}
 
-	_, statErr := os.Stat(lib.StoragePath+albumname+"/"+imagename)
+	_, statErr := os.Stat(lib.StoragePath + albumname + "/" + imagename)
 	if os.IsNotExist(statErr) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": imagename + " image is present database but not in storage"})
 		return
@@ -74,9 +75,9 @@ func GetImage(c *gin.Context){
 	header["Content-type"] = []string{"application/octet-stream"}
 	header["Content-Disposition"] = []string{"attachment; filename=" + imagename}
 
-	file, err := os.Open(lib.StoragePath+albumname+"/"+imagename)
+	file, err := os.Open(lib.StoragePath + albumname + "/" + imagename)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Could not sent image "+ imagename+ " for download"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Could not sent image " + imagename + " for download"})
 		return
 	}
 	defer file.Close()
@@ -96,7 +97,7 @@ func GetImage(c *gin.Context){
 // @Failure 400 {object} model.ErrorMessage
 // @Failure 500 {object} model.ErrorMessage
 // @Router /albums/{albumName}/images [post]
-func AddImage(c *gin.Context){
+func AddImage(c *gin.Context) {
 	albumname := c.Param("albumName")
 	file, formErr := c.FormFile("file")
 	if formErr != nil {
@@ -122,9 +123,9 @@ func AddImage(c *gin.Context){
 		return
 	}
 
-	_, statErr := os.Stat(lib.StoragePath+albumname+"/"+filename)
+	_, statErr := os.Stat(lib.StoragePath + albumname + "/" + filename)
 	if !os.IsNotExist(statErr) {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": filename+ " image already present in storage but not present in database"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": filename + " image already present in storage but not present in database"})
 		return
 	}
 
@@ -136,12 +137,12 @@ func AddImage(c *gin.Context){
 	lib.ImageInfo.Lock()
 	lib.ImageInfo.AlbumMap[albumname][filename] = model.ImageField{
 		FileName: filename,
-		FilePath: lib.StoragePath+albumname+"/"+filename,
+		FilePath: lib.StoragePath + albumname + "/" + filename,
 	}
 	lib.ImageInfo.Unlock()
-	lib.NotifierChan <- filename+" image added to album "+ albumname
+	lib.NotifierChan <- filename + " image added to album " + albumname
 	lib.ImageInfoChan <- true
-	c.JSON(http.StatusOK, gin.H{"message": filename+" image added to album "+ albumname})
+	c.JSON(http.StatusOK, gin.H{"message": filename + " image added to album " + albumname})
 }
 
 // DeleteImage handler deletes a image from the specified album
@@ -155,13 +156,13 @@ func AddImage(c *gin.Context){
 // @Failure 400 {object} model.ErrorMessage
 // @Failure 500 {object} model.ErrorMessage
 // @Router /albums/{albumName}/images/{imageName} [delete]
-func DeleteImage(c *gin.Context){
+func DeleteImage(c *gin.Context) {
 	albumname := c.Param("albumName")
 	imagename := c.Param("imageName")
 	if respCode, deleteImageErr := lib.OpDeleteImage(albumname, imagename); deleteImageErr != nil {
 		c.JSON(respCode, gin.H{"error": deleteImageErr.Error()})
 	} else {
-		c.JSON(respCode, gin.H{"message": imagename + " image deleted from album "+ albumname})
+		c.JSON(respCode, gin.H{"message": imagename + " image deleted from album " + albumname})
 	}
 }
 
@@ -178,7 +179,7 @@ func DeleteImage(c *gin.Context){
 // @Failure 400 {object} model.ErrorMessage
 // @Failure 500 {object} model.ErrorMessage
 // @Router /albums/{albumName}/images/{imageName} [patch]
-func UpdateImage(c *gin.Context){
+func UpdateImage(c *gin.Context) {
 	albumname := c.Param("albumName")
 	oldimagename := c.Param("imageName")
 
@@ -191,6 +192,6 @@ func UpdateImage(c *gin.Context){
 	if respCode, updateImageErr := lib.OpUpdateImage(albumname, oldimagename, updateImage.ImageName); updateImageErr != nil {
 		c.JSON(respCode, gin.H{"error": updateImageErr.Error()})
 	} else {
-		c.JSON(respCode, gin.H{"message": oldimagename + " image modified to "+ updateImage.ImageName})
+		c.JSON(respCode, gin.H{"message": oldimagename + " image modified to " + updateImage.ImageName})
 	}
 }
