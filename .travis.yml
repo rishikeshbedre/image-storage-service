@@ -1,0 +1,16 @@
+language: go
+
+go:
+  - "1.14"
+
+services:
+  - docker
+
+env:
+  - GO111MODULE=on
+
+install:
+  - go mod download
+
+script:
+  - ./extras/build.sh
