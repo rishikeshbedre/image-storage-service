@@ -59,7 +59,7 @@ Or else link to the document is shown in the logs. Swagger document can be disab
 
 Benchmarking for this application is not done.
 
-<p align="justify">`*But when ran simple tests, I noticed that while adding a big image the container's RAM usage was increasing and not releasing it back. So I debug the application using pprof and saw that both heap and CPU profile were fine. Later I decreased the value of memory block used by multipart forms (from 32mb to 8mb), this decreased the memory usage but didn't solve the memory issue. As I was using golang version above 1.12, this is the expected behaviour (memory is freed by GC but OS doesn't take it back until its required). This can be harmful in container environment, so I have set 'GODEBUG=madvdontneed=1' instead of MADV_FREE and calling FreeOSMemory() in a interval.*`</p>
+<p align="justify"><i>"But when ran simple tests, I noticed that while adding a big image the container's RAM usage was increasing and not releasing it back. So I debug the application using pprof and saw that both heap and CPU profile were fine. Later I decreased the value of memory block used by multipart forms (from 32mb to 8mb), this decreased the memory usage but didn't solve the memory issue. As I was using golang version above 1.12, this is the expected behaviour (memory is freed by GC but OS doesn't take it back until its required). This can be harmful in container environment, so I have set 'GODEBUG=madvdontneed=1' instead of MADV_FREE and calling FreeOSMemory() in a interval."</i></p>
 
 ## Docker
 
