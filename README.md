@@ -23,5 +23,5 @@ Image Storage Service is a microservice based on REST APIs to store and retrieve
 
 ## How it Works
 
-![design](https://github.com/rishikeshbedre/image-storage-service/blob/master/extras/design.png)
+![design](https://github.com/rishikeshbedre/image-storage-service/blob/master/extras/design.jpg)
 
