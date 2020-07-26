@@ -5,7 +5,7 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/129c09fa009440928ba88410be8d5fd1)](https://app.codacy.com/manual/rishikeshbedre/image-storage-service?utm_source=github.com&utm_medium=referral&utm_content=rishikeshbedre/image-storage-service&utm_campaign=Badge_Grade_Dashboard)
 [![Go Report Card](https://goreportcard.com/badge/github.com/rishikeshbedre/image-storage-service)](https://goreportcard.com/report/github.com/rishikeshbedre/image-storage-service)
 
-<p align="justify">Image Storage Service is a microservice based on REST APIs to store and retrieve images. It features REST end-points to add/delete/modify albums and images. It is written using [Gin Web Framework](https://github.com/gin-gonic/gin) and [jsoniter](https://github.com/json-iterator/go) **to make server high performant** and have used [Swaggo](https://github.com/swaggo/swag) for API documentation.</p>
+<p align="justify">Image Storage Service is a microservice based on REST APIs to store and retrieve images. It features REST end-points to add/delete/modify albums and images. It is written using [Gin Web Framework](https://github.com/gin-gonic/gin) and [jsoniter](https://github.com/json-iterator/go) <b>to make server high performant</b> and have used [Swaggo](https://github.com/swaggo/swag) for API documentation.</p>
 
 ## Contents
 
