@@ -5,7 +5,7 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/129c09fa009440928ba88410be8d5fd1)](https://app.codacy.com/manual/rishikeshbedre/image-storage-service?utm_source=github.com&utm_medium=referral&utm_content=rishikeshbedre/image-storage-service&utm_campaign=Badge_Grade_Dashboard)
 [![Go Report Card](https://goreportcard.com/badge/github.com/rishikeshbedre/image-storage-service)](https://goreportcard.com/report/github.com/rishikeshbedre/image-storage-service)
 
-Image Storage Service is a microservice based on REST APIs to store and retrieve images. It features REST end-points to add/delete/modify albums and images. It is written using [Gin Web Framework](https://github.com/gin-gonic/gin) and [jsoniter](https://github.com/json-iterator/go) to make server high performant and have used [Swaggo](https://github.com/swaggo/swag) for API documentation.
+<p align="justify">Image Storage Service is a microservice based on REST APIs to store and retrieve images. It features REST end-points to add/delete/modify albums and images. It is written using [Gin Web Framework](https://github.com/gin-gonic/gin) and [jsoniter](https://github.com/json-iterator/go) **to make server high performant** and have used [Swaggo](https://github.com/swaggo/swag) for API documentation.</p>
 
 ## Contents
 
@@ -59,10 +59,52 @@ Or else link to the document is shown in the logs. Swagger document can be disab
 
 Benchmarking for this application is not done.
 
-<p align="justify"><i>"But when ran simple tests, I noticed that while adding a big image the container's RAM usage was increasing and not releasing it back. So I debug the application using pprof and saw that both heap and CPU profile were fine. Later I decreased the value of memory block used by multipart forms (from 32mb to 8mb), this decreased the memory usage but didn't solve the memory issue. As I was using golang version above 1.12, this is the expected behaviour (memory is freed by GC but OS doesn't take it back until its required). This can be harmful in container environment, so I have set 'GODEBUG=madvdontneed=1' instead of MADV_FREE and calling FreeOSMemory() in a interval."</i></p>
+<p align="justify"><i>"As this application uses Gin web framework, the default logs of gin server shows how much time is consumed by each request to send response back. By running sample tests, there was high RAM usage when adding the image to storage and this issue was debugged by running pprof on heap and CPU profile. Later this issue was solved by decreasing the value of memory block used by multipart forms (from 32mb to 8mb). As this microservice will run in container environment and this application is written using golang version above 1.12, 'GODEBUG=madvdontneed=1' flag is set instead of default MADV_FREE and calling FreeOSMemory() in a interval so that memory is freed whenever the application doesn't need it anymore."</i></p>
 
 ## Docker
 
+### Docker Build
+
+To build the container for this microservice, you need to run this script:
+
+```sh
+$ git clone https://github.com/rishikeshbedre/image-storage-service.git
+$ cd image-storage-service
+$ ./extras/build.sh
+```
+
+This script builds the image storage service and then pulls eclipse-mosquitto image from docker-hub and then builds notification subscriber service image which helps in subscribing to notification.
+
+### Docker Run
+
+After the docker build stage, you can run the containers using following commands:
+
+```sh
+$ docker run -it -p 1883:1883 --name mq_broker_service eclipse-mosquitto:1.6.9
+$ docker run -it -p 3333:3333 -e HOSTIP=`hostname -I | awk '{print $1}'` -v "$(pwd)"/image-db:/home/app/image-db  --name image-store image-storage-service:0.0.1
+$ docker run -it --name notify-sub -e HOSTIP=`hostname -I | awk '{print $1}'`  notification-subscriber-service:0.0.1
+```
+
+### Docker Compose
+
+After the docker build stage, you can run the containers using following script:
+
+```sh
+$ ./extras/run.sh
+```
+
 ## Testing
 
+To run test just run following command:
+
+```sh
+$ go mod download
+$ make test
+```
+
 ## Limitations
+
+1. There is no authentication on api routes and the server is running on http mode.
+2. There is no field validation or image file validation on api routes.
+3. As the microservice uses file-system as database, security has to be maintained at OS.
+4. Notification service has to be run in secure mode.

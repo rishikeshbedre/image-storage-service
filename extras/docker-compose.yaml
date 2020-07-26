@@ -26,6 +26,8 @@ services:
     networks: 
       - test-network
     image: notification-subscriber-service:0.0.1
+    environment: 
+      - HOSTIP=${HOSTIP}
     depends_on: 
       - "mq_broker_service"
     container_name: notify_subscriber_container
